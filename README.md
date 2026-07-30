@@ -15,7 +15,7 @@ Amir AI Runner یک ابزار قدرتمند و کاملاً رایگان اس�
 
 | داشبورد اصلی | چت سریع | مانیتورینگ سیستم |
 | :---: | :---: | :---: |
-| ![Dashboard](https://via.placeholder.com/300x150?text=Dashboard) | ![Chat](https://via.placeholder.com/300x150?text=Chat) | ![Monitor](https://via.placeholder.com/300x150?text=Monitor) |
+| ![Dashboard](https://amirgpt.ir/3.png) | ![Chat](https://amirgpt.ir/2.png) | ![Monitor](https://amirgpt.ir/1.png) |
 
 ---
 
@@ -61,8 +61,8 @@ Amir AI Runner یک ابزار قدرتمند و کاملاً رایگان اس�
 
 ```bash
 # از طریق Git (توصیه شده)
-git clone https://github.com/your-username/amir-ai-runner.git
-cd amir-ai-runner
+git clone https://github.com/Ciahshi/Amir_AI_Runner
+cd Amir_AI_Runner
 
 # یا به‌صورت دستی: فایل‌های پروژه را دانلود و از حالت فشرده خارج کنید.
 ```

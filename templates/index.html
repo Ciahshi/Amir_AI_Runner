@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amir AI Runner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: #0b0e14;
+            color: #e0e5ec;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .glass-card {
+            background: rgba(20, 27, 36, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            max-width: 1100px;
+            width: 100%;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, #a78bfa, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .status-badge {
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 700;
+            background: #1e293b;
+            color: #94a3b8;
+        }
+        .status-badge.online {
+            background: #064e3b;
+            color: #34d399;
+            border: 1px solid #34d399;
+        }
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .control-group {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 18px;
+            padding: 22px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        .control-group label {
+            display: block;
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .control-group select, .control-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 14px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .control-group select:focus, .control-group input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+        }
+        .btn-start {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            color: white;
+            box-shadow: 0 8px 20px -6px #6d28d9;
+        }
+        .btn-start:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 12px 28px -8px #6d28d9;
+        }
+        .btn-stop {
+            background: #dc2626;
+            color: white;
+            box-shadow: 0 8px 20px -6px #dc2626;
+        }
+        .btn-stop:hover:not(:disabled) {
+            background: #b91c1c;
+            transform: scale(1.02);
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .btn-secondary {
+            background: #1e293b;
+            color: #cbd5e1;
+        }
+        .btn-secondary:hover {
+            background: #334155;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 18px 0;
+        }
+        .stat-item {
+            background: #0f172a;
+            padding: 14px;
+            border-radius: 14px;
+            text-align: center;
+        }
+        .stat-item .value {
+            font-size: 22px;
+            font-weight: 800;
+            color: #f1f5f9;
+        }
+        .stat-item .label {
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .log-box {
+            background: #0a0f18;
+            border-radius: 16px;
+            padding: 16px;
+            height: 180px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #94a3b8;
+            border: 1px solid #1e293b;
+            margin-top: 12px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.6;
+        }
+        .log-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .log-box::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .log-box::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+
+        .chat-area {
+            margin-top: 18px;
+        }
+        .chat-area textarea {
+            width: 100%;
+            padding: 14px;
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 16px;
+            color: white;
+            font-size: 15px;
+            min-height: 80px;
+            resize: vertical;
+            outline: none;
+        }
+        .chat-area textarea:focus {
+            border-color: #8b5cf6;
+        }
+        .chat-response {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 12px;
+            border: 1px solid #1e293b;
+            min-height: 60px;
+            color: #e2e8f0;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #475569;
+        }
+
+        @media (max-width: 800px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="glass-card">
+    <div class="header">
+        <h1>⚡ Amir AI Runner</h1>
+        <div id="statusBadge" class="status-badge">⏹ متوقف</div>
+    </div>
+
+    <div class="grid-2col">
+        <div class="control-group">
+            <label>📂 انتخاب مدل آفلاین</label>
+            <select id="modelSelect">
+                <option value="">-- بارگذاری مدل‌ها --</option>
+            </select>
+            <div style="margin-top: 12px; display: flex; gap: 10px;">
+                <input type="number" id="portInput" value="8000" placeholder="پورت" style="flex:1; padding:10px; background:#0f172a; border:1px solid #1e293b; border-radius:12px; color:white;">
+                <input type="number" id="ctxInput" value="4096" placeholder="Context" style="flex:1; padding:10px; background:#0f172a; border:1px solid #1e293b; border-radius:12px; color:white;">
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-start" id="startBtn">▶ استارت سرور</button>
+                <button class="btn btn-stop" id="stopBtn" disabled>⏹ استاپ</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>📊 وضعیت سیستم</label>
+            <div class="stats-grid">
+                <div class="stat-item"><span class="value" id="cpuVal">0%</span><div class="label">CPU</div></div>
+                <div class="stat-item"><span class="value" id="ramVal">0%</span><div class="label">RAM</div></div>
+                <div class="stat-item"><span class="value" id="ramUsedVal">0 GB</span><div class="label">مصرف</div></div>
+            </div>
+            <label>📜 لاگ سرور</label>
+            <div class="log-box" id="logBox">⏳ منتظر شروع سرور...</div>
+        </div>
+    </div>
+
+    <div class="control-group" style="margin-top:0;">
+        <label>💬 چت سریع (تست مدل)</label>
+        <div class="chat-area">
+            <textarea id="chatInput" placeholder="یه سوال از مدل بپرس... مثلاً: سلام، چطوری؟"></textarea>
+            <button class="btn btn-secondary" id="chatBtn" style="margin-top:10px; width:100%;">🚀 ارسال به مدل</button>
+            <div class="chat-response" id="chatResponse">پاسخ مدل اینجا نمایش داده میشه...</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Base URL: <code id="baseUrlDisplay">http://127.0.0.1:8000/v1</code> &nbsp;|&nbsp; ساخته شده با ❤️ توسط Amir
+    </div>
+</div>
+
+<script>
+    let isRunning = false;
+
+    const modelSelect = document.getElementById('modelSelect');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const logBox = document.getElementById('logBox');
+    const statusBadge = document.getElementById('statusBadge');
+    const portInput = document.getElementById('portInput');
+    const ctxInput = document.getElementById('ctxInput');
+    const chatInput = document.getElementById('chatInput');
+    const chatBtn = document.getElementById('chatBtn');
+    const chatResponse = document.getElementById('chatResponse');
+    const baseUrlDisplay = document.getElementById('baseUrlDisplay');
+
+    async function scanModels() {
+        const res = await fetch('/api/scan');
+        const data = await res.json();
+        modelSelect.innerHTML = '<option value="">-- انتخاب مدل --</option>';
+        data.models.forEach(m => {
+            const opt = document.createElement('option');
+            opt.value = JSON.stringify({path: m.path, type: m.type});
+            opt.textContent = `${m.name} (${m.type} - ${m.size}) [${m.quant}]`;
+            modelSelect.appendChild(opt);
+        });
+    }
+
+    async function updateStatus() {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        isRunning = data.running;
+        if (isRunning) {
+            statusBadge.textContent = '🟢 در حال اجرا';
+            statusBadge.className = 'status-badge online';
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+        } else {
+            statusBadge.textContent = '⏹ متوقف';
+            statusBadge.className = 'status-badge';
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+        }
+        updateBaseUrl();
+    }
+
+    function updateBaseUrl() {
+        const port = portInput.value || '8000';
+        baseUrlDisplay.textContent = `http://127.0.0.1:${port}/v1`;
+    }
+
+    async function fetchLogs() {
+        const res = await fetch('/api/logs');
+        const data = await res.json();
+        logBox.textContent = data.logs.join('');
+        logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    async function fetchStats() {
+        const res = await fetch('/api/system');
+        const data = await res.json();
+        document.getElementById('cpuVal').textContent = data.cpu + '%';
+        document.getElementById('ramVal').textContent = data.ram + '%';
+        document.getElementById('ramUsedVal').textContent = data.ram_used;
+    }
+
+    startBtn.onclick = async () => {
+        const selected = modelSelect.value;
+        if (!selected) { alert('لطفاً یک مدل انتخاب کن!'); return; }
+        const model = JSON.parse(selected);
+        const port = portInput.value || '8000';
+        const ctx = ctxInput.value || '4096';
+
+        startBtn.disabled = true;
+        startBtn.textContent = '⏳ در حال راه‌اندازی...';
+
+        const res = await fetch('/api/start', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                path: model.path,
+                type: model.type,
+                port: port,
+                n_ctx: ctx
+            })
+        });
+        const data = await res.json();
+        alert(data.message);
+        if (data.success) {
+            await updateStatus();
+            fetchLogs();
+        }
+        startBtn.disabled = false;
+        startBtn.textContent = '▶ استارت سرور';
+    };
+
+    stopBtn.onclick = async () => {
+        if (!confirm('میخوای سرور رو خاموش کنی؟')) return;
+        stopBtn.disabled = true;
+        stopBtn.textContent = '⏳ در حال توقف...';
+        const res = await fetch('/api/stop', {method: 'POST'});
+        const data = await res.json();
+        alert(data.message);
+        await updateStatus();
+        fetchLogs();
+        stopBtn.disabled = false;
+        stopBtn.textContent = '⏹ استاپ';
+    };
+
+    chatBtn.onclick = async () => {
+        const prompt = chatInput.value.trim();
+        if (!prompt) { alert('یه متن بنویس!'); return; }
+        chatResponse.textContent = '⏳ در حال فکر کردن...';
+        const port = portInput.value || '8000';
+        try {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({prompt: prompt, port: port})
+            });
+            const data = await res.json();
+            if (data.error) {
+                chatResponse.textContent = '❌ ' + data.error;
+            } else {
+                let answer = data.choices?.[0]?.text || data.choices?.[0]?.message?.content || JSON.stringify(data);
+                chatResponse.textContent = answer;
+            }
+        } catch (e) {
+            chatResponse.textContent = '❌ خطا: ' + e.message;
+        }
+    };
+
+    portInput.addEventListener('input', updateBaseUrl);
+
+    // آپدیت خودکار
+    setInterval(() => {
+        if (isRunning) {
+            fetchLogs();
+            fetchStats();
+        }
+    }, 2000);
+
+    // لود اولیه
+    scanModels();
+    updateStatus();
+    fetchStats();
+    updateBaseUrl();
+</script>
+</body>
+</html>

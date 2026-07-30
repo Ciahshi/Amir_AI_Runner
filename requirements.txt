@@ -1,0 +1,4 @@
+flask
+llama-cpp-python[server]
+psutil
+requests

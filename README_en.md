@@ -1,3 +1,4 @@
+[🇮🇷 مطالعه به زبان فارسی](README.md)
 # 🚀 Amir AI Runner
 
 **Easy Setup and Management of Offline Large Language Models (LLMs) on Your Local Machine**

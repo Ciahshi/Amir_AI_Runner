@@ -1,3 +1,4 @@
+[🇺🇸 Read in English](README_en.md)
 # 🚀 Amir AI Runner
 
 **راه‌اندازی و مدیریت آسان مدل‌های آفلاین زبان بزرگ (LLM) روی سیستم شخصی شما**
